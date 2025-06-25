@@ -1,0 +1,85 @@
+body {
+  background-color: #f8f8f4; /* A hint of yellow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+}
+
+#recordButton {
+  background-color: #e0e0e0; /* Light grey */
+  border: none;
+  padding: 20px 40px;
+  font-size: 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#recordButton:hover {
+  background-color: #d0d0d0;
+}
+
+#recordButton.recording {
+  background-color: #ff4136; /* A soft red for recording */
+  color: white;
+}
+
+#status {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #888;
+  min-height: 25px;
+}
+
+#resultContainer {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+#resultText {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+#resultText h2, #resultText h3, #resultText h4 {
+  color: #333;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+#resultText h2 { font-size: 1.5em; }
+#resultText h3 { font-size: 1.25em; }
+#resultText h4 { font-size: 1.1em; }
+#resultText p {
+  line-height: 1.6;
+}
+#resultText strong {
+  font-weight: bold;
+}
+
+.result-button {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.result-button:hover {
+  background-color: #d0d0d0;
+} 

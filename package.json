@@ -1,0 +1,19 @@
+{
+  "name": "voice-memo-app",
+  "version": "1.0.0",
+  "description": "A web app to record voice memos, transcribe them, and format them as lesson notes.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.21.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.47.1"
+  }
+} 

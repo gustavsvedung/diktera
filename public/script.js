@@ -80,6 +80,9 @@ function displayResult(text) {
   resultDiv.id = 'resultText';
   resultDiv.innerHTML = marked.parse(text);
   resultContainer.appendChild(resultDiv);
+  
+  // Auto-scroll to bottom of the text container
+  resultDiv.scrollTop = resultDiv.scrollHeight;
 
   const copyButton = document.createElement('button');
   copyButton.textContent = 'Kopiera till urklipp';

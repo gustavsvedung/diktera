@@ -50,6 +50,9 @@ body {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 #resultText h2, #resultText h3, #resultText h4 {

@@ -51,13 +51,13 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
 [Den transkriberade röstanteckningen i sin helhet, justerad till tydligt skriftspråk. Så ta bort alla talspråskformuleringar och formatera texten som om det vore en personlig minnesanteckning gjord av en lärare. Om det finns uppgifter om att läraren lovat att fixa något efter lektionen, som att t ex dela noter med eleven, markera detta med fet stil.]
 
 #### Dagens arbetsmaterial
-[Titel på ev. material som arbetats med under lektionen, till exempel en sång, musikstycke, artikel eller bok. Om det handlar om musik, ta med anteckning om tonart eller transponering om det finns.]
+[Titel på ev. material som arbetats med under lektionen, till exempel en sång, musikstycke, artikel eller bok. Skriv ut titeln i originalspråket, översätt den inte. Om det handlar om musik, ta med anteckning om tonart eller transponering om det finns.]
 
 #### Läxa till nästa lektion
 [Uppgift om ev. ny läxa eller särskild arbetsuppgift som givits eleven att arbeta med till nästa lektion.]`;
 
     const today = new Date().toISOString().split('T')[0];
-    const prompt = `Du är en hjälpsam assistent för en lärare. Analysera följande transkriberade röstanteckning från en lektion och formatera den enligt mallen med markdown. Byt ut [dagens datum] mot dagens datum (${today}). Se till att all text är på svenska.
+    const prompt = `Analysera röstanteckningarna och använd informationen för att fylla i lektionsdokumentationen enligt mallen nedan. Behåll all information från anteckningen, inklusive mindre detaljer och observationer. Dagens datum: ${today}.
 
 Här är mallen:
 ${lessonTemplate}

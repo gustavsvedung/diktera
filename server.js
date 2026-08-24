@@ -70,11 +70,20 @@ Här är den transkriberade texten:
     stage = 'formatting (Anthropic)';
     const claudeResponse = await anthropic.messages.create({
       model: "claude-sonnet-5",
-      max_tokens: 1024,
+      max_tokens: 4096,
       messages: [{ role: 'user', content: prompt }],
     });
 
-    const formattedText = claudeResponse.content[0].text;
+    // The model may emit thinking blocks before the answer, so pick the text
+    // block rather than assuming it is first.
+    const formattedText = claudeResponse.content.find((b) => b.type === 'text')?.text;
+
+    if (!formattedText) {
+      throw new Error(
+        `No text block in Claude response (stop_reason: ${claudeResponse.stop_reason}, ` +
+        `blocks: ${claudeResponse.content.map((b) => b.type).join(', ')})`
+      );
+    }
 
     res.json({ formattedText });
 

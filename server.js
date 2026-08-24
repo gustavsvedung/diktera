@@ -36,7 +36,8 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
     // Write buffer to a temporary file because OpenAI SDK needs a file stream
     fs.writeFileSync(tempFilePath, audioBuffer);
 
-    // 1. Transcribe with Whisper
+    // 1. Transcribe (gpt-4o-transcribe handles English titles inside Swedish
+    // speech far better than whisper-1 did)
     stage = 'transcription (OpenAI)';
     const transcription = await openai.audio.transcriptions.create({
       file: fs.createReadStream(tempFilePath),

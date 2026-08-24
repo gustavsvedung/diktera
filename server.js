@@ -40,7 +40,7 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
     stage = 'transcription (OpenAI)';
     const transcription = await openai.audio.transcriptions.create({
       file: fs.createReadStream(tempFilePath),
-      model: 'whisper-1',
+      model: 'gpt-4o-transcribe',
       language: 'sv', // Swedish
     });
 
@@ -71,6 +71,8 @@ Här är den transkriberade texten:
     const claudeResponse = await anthropic.messages.create({
       model: "claude-sonnet-5",
       max_tokens: 4096,
+      // Filling in a template from a short memo doesn't need deep reasoning.
+      output_config: { effort: 'low' },
       messages: [{ role: 'user', content: prompt }],
     });
 

@@ -30,12 +30,14 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
 
   const audioBuffer = req.file.buffer;
   const tempFilePath = path.join(__dirname, 'temp_audio.webm');
-  
+  let stage = 'init';
+
   try {
     // Write buffer to a temporary file because OpenAI SDK needs a file stream
     fs.writeFileSync(tempFilePath, audioBuffer);
 
     // 1. Transcribe with Whisper
+    stage = 'transcription (OpenAI)';
     const transcription = await openai.audio.transcriptions.create({
       file: fs.createReadStream(tempFilePath),
       model: 'whisper-1',
@@ -65,6 +67,7 @@ ${lessonTemplate}
 Här är den transkriberade texten:
 "${transcribedText}"`;
 
+    stage = 'formatting (Anthropic)';
     const claudeResponse = await anthropic.messages.create({
       model: "claude-sonnet-5",
       max_tokens: 1024,
@@ -76,7 +79,14 @@ Här är den transkriberade texten:
     res.json({ formattedText });
 
   } catch (error) {
-    console.error('Error processing audio:', error);
+    // Log the full provider error server-side (visible in the Render logs).
+    // The client deliberately only ever sees the generic message below.
+    console.error(`Error processing audio during ${stage}:`, {
+      status: error.status,
+      type: error.error?.error?.type ?? error.error?.type,
+      code: error.error?.error?.code ?? error.code,
+      message: error.message,
+    });
     res.status(500).send('Error processing audio.');
   } finally {
     // Clean up the temporary file

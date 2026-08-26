@@ -41,12 +41,29 @@ function stopRecording() {
   statusDisplay.textContent = 'Bearbetar...';
 }
 
+// Browsers disagree on what MediaRecorder produces: Chrome gives WebM, Firefox
+// records Ogg by default. The transcription API goes by the file extension, so
+// the recording has to be labelled with whatever it actually is.
+const EXTENSIONS = {
+  'audio/webm': 'webm',
+  'audio/ogg': 'ogg',
+  'audio/mp4': 'mp4',
+  'audio/mpeg': 'mp3',
+  'audio/wav': 'wav',
+};
+
+function extensionFor(mimeType) {
+  const base = (mimeType || '').split(';')[0].trim().toLowerCase();
+  return EXTENSIONS[base] || 'webm';
+}
+
 async function processAudio() {
-  const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+  const mimeType = mediaRecorder.mimeType || 'audio/webm';
+  const audioBlob = new Blob(audioChunks, { type: mimeType });
   audioChunks = [];
 
   const formData = new FormData();
-  formData.append('audio', audioBlob);
+  formData.append('audio', audioBlob, `recording.${extensionFor(mimeType)}`);
 
   try {
     statusDisplay.textContent = 'Transkriberar...';

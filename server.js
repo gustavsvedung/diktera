@@ -17,6 +17,22 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+const MIME_EXTENSIONS = {
+  'audio/webm': '.webm',
+  'audio/ogg': '.ogg',
+  'audio/mp4': '.mp4',
+  'audio/mpeg': '.mp3',
+  'audio/wav': '.wav',
+};
+
+// Prefer the uploaded filename's extension, fall back to the declared MIME type.
+function audioExtension(file) {
+  const fromName = path.extname(file.originalname || '').toLowerCase();
+  if (fromName) return fromName;
+  const base = (file.mimetype || '').split(';')[0].trim().toLowerCase();
+  return MIME_EXTENSIONS[base] || '.webm';
+}
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -29,7 +45,9 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
   }
 
   const audioBuffer = req.file.buffer;
-  const tempFilePath = path.join(__dirname, 'temp_audio.webm');
+  // The transcription API infers the audio format from the file extension, so
+  // preserve whatever the browser actually recorded rather than assuming WebM.
+  const tempFilePath = path.join(__dirname, `temp_audio${audioExtension(req.file)}`);
   let stage = 'init';
 
   try {

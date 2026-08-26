@@ -16,7 +16,7 @@ recordButton.addEventListener('click', () => {
 async function startRecording() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder = new MediaRecorder(stream, recorderOptions());
     mediaRecorder.ondataavailable = event => {
       audioChunks.push(event.data);
     };
@@ -39,6 +39,21 @@ function stopRecording() {
   recordButton.textContent = 'Spela in';
   recordButton.classList.remove('recording');
   statusDisplay.textContent = 'Bearbetar...';
+}
+
+// The transcription API accepts mp3, mp4, mpeg, mpga, m4a, wav and webm — but
+// not Ogg, which is what Firefox records by default. Ask for a supported
+// container instead of taking whatever the browser prefers.
+const PREFERRED_TYPES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4',
+];
+
+function recorderOptions() {
+  if (typeof MediaRecorder.isTypeSupported !== 'function') return {};
+  const supported = PREFERRED_TYPES.find((type) => MediaRecorder.isTypeSupported(type));
+  return supported ? { mimeType: supported } : {};
 }
 
 // Browsers disagree on what MediaRecorder produces: Chrome gives WebM, Firefox

@@ -69,7 +69,7 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
     const lessonTemplate = `## Lektion [dagens datum]
 
 ### Minnesanteckningar
-[Den transkriberade röstanteckningen i sin helhet, justerad till tydligt skriftspråk. Så ta bort alla talspråskformuleringar och formatera texten som om det vore en personlig minnesanteckning gjord av en lärare. Om det finns uppgifter om att läraren lovat att fixa något efter lektionen, som att t ex dela noter med eleven, markera detta med fet stil.]
+[Det väsentliga ur röstanteckningen, skrivet som lärarens egen koncisa minnesanteckning på tydligt skriftspråk. Oftast räcker några korta stycken; en lektion med mycket att följa upp får ta mer plats. Om läraren lovat att fixa något efter lektionen, som att t ex dela noter med eleven, markera detta med fet stil.]
 
 #### Dagens arbetsmaterial
 [Titel på ev. material som arbetats med under lektionen, till exempel en sång, musikstycke, artikel eller bok. Skriv ut titeln i originalspråket, översätt den inte. Om det handlar om musik, ta med anteckning om tonart eller transponering om det finns.]
@@ -78,7 +78,11 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
 [Uppgift om ev. ny läxa eller särskild arbetsuppgift som givits eleven att arbeta med till nästa lektion.]`;
 
     const today = new Date().toISOString().split('T')[0];
-    const prompt = `Analysera röstanteckningarna och använd informationen för att fylla i lektionsdokumentationen enligt mallen nedan. Behåll all information från anteckningen, inklusive mindre detaljer och observationer. Dagens datum: ${today}.
+    const prompt = `Gör om en musiklärares inspelade röstanteckning till lektionsanteckningar enligt mallen nedan. Anteckningarna är lärarens arbetsverktyg: de läses inför nästa lektion med samma elev och ska snabbt visa var eleven står och vad som behöver följas upp. Skriv som en erfaren lärare skulle göra – koncentrerat, men utan att tappa något som spelar roll för undervisningen framåt.
+
+Behåll alltid det som påverkar kommande lektioner: vad eleven utvecklats i eller kämpar med, vad som fungerade som övning eller metod, konkreta musikaliska detaljer (tonart, transponering, ställen i låten, tekniska moment), kommande uppspelningar eller andra datum, löften läraren gett och läxor. Stryk utfyllnad, upprepningar och det som saknar betydelse för elevens fortsatta utveckling, som praktiska småsaker kring själva lektionstillfället. Lägg inte till något som inte finns i anteckningen.
+
+Dagens datum: ${today}.
 
 Här är mallen:
 ${lessonTemplate}

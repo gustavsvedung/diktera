@@ -33,6 +33,24 @@ function audioExtension(file) {
   return MIME_EXTENSIONS[base] || '.webm';
 }
 
+const VOCABULARY_FILE = path.join(__dirname, 'ordlista.txt');
+
+// Terms the transcriber tends to mishear, kept in ordlista.txt one per line.
+// Read on every request so edits take effect without a restart.
+function transcriptionPrompt() {
+  let terms = [];
+  try {
+    terms = fs.readFileSync(VOCABULARY_FILE, 'utf8')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'));
+  } catch (error) {
+    console.error('Could not read ordlista.txt:', error.message);
+  }
+  if (terms.length === 0) return undefined;
+  return `Röstanteckning från en musiklärare efter en lektion. Ord som kan förekomma: ${terms.join(', ')}.`;
+}
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -57,10 +75,12 @@ app.post('/process-audio', upload.single('audio'), async (req, res) => {
     // 1. Transcribe (gpt-4o-transcribe handles English titles inside Swedish
     // speech far better than whisper-1 did)
     stage = 'transcription (OpenAI)';
+    const vocabularyHint = transcriptionPrompt();
     const transcription = await openai.audio.transcriptions.create({
       file: fs.createReadStream(tempFilePath),
       model: 'gpt-4o-transcribe',
       language: 'sv', // Swedish
+      ...(vocabularyHint && { prompt: vocabularyHint }),
     });
 
     const transcribedText = transcription.text;

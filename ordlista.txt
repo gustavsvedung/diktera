@@ -1,0 +1,14 @@
+# Ordlista för transkriberingen
+#
+# Ord och namn som transkriberingen brukar höra fel, ett per rad.
+# Listan skickas med som ledtråd till OpenAI vid varje inspelning.
+# Rader som börjar med # ignoreras, liksom tomma rader.
+#
+# Obs: repot är publikt på GitHub. Skriv inga elevnamn eller annat
+# som inte får vara offentligt.
+#
+# Håll listan till ord som faktiskt blivit fel – en lång lista med
+# sällsynta ord gör ledtråden sämre för de vanliga.
+
+ensemblelektion
+kompskiss
